@@ -80,13 +80,13 @@ export default function UploadPage() {
       // Upload Passport
       const passportPath = `${token}/passport.${passportFile.name.split('.').pop()}`;
       const { data: passportData, error: passportError } = await supabase.storage
-        .from('applicant-documents')
+        .from('Applicant Documents')
         .upload(passportPath, passportFile, { upsert: true });
 
       if (passportError) throw new Error('Failed to upload passport');
 
       const { data: { publicUrl: passportUrl } } = supabase.storage
-        .from('applicant-documents')
+        .from('Applicant Documents')
         .getPublicUrl(passportPath);
 
       uploadedFiles.push({
@@ -99,13 +99,13 @@ export default function UploadPage() {
       // Upload CSCS Front
       const cscsFrontPath = `${token}/cscs_front.${cscsFrontFile.name.split('.').pop()}`;
       const { data: cscsFrontData, error: cscsFrontError } = await supabase.storage
-        .from('applicant-documents')
+        .from('Applicant Documents')
         .upload(cscsFrontPath, cscsFrontFile, { upsert: true });
 
       if (cscsFrontError) throw new Error('Failed to upload CSCS front');
 
       const { data: { publicUrl: cscsFrontUrl } } = supabase.storage
-        .from('applicant-documents')
+        .from('Applicant Documents')
         .getPublicUrl(cscsFrontPath);
 
       uploadedFiles.push({
@@ -118,13 +118,13 @@ export default function UploadPage() {
       // Upload CSCS Back
       const cscsBackPath = `${token}/cscs_back.${cscsBackFile.name.split('.').pop()}`;
       const { data: cscsBackData, error: cscsBackError } = await supabase.storage
-        .from('applicant-documents')
+        .from('Applicant Documents')
         .upload(cscsBackPath, cscsBackFile, { upsert: true });
 
       if (cscsBackError) throw new Error('Failed to upload CSCS back');
 
       const { data: { publicUrl: cscsBackUrl } } = supabase.storage
-        .from('applicant-documents')
+        .from('Applicant Documents')
         .getPublicUrl(cscsBackPath);
 
       uploadedFiles.push({
