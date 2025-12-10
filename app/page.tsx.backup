@@ -20,7 +20,6 @@ export default function UploadPage() {
   const [passportFile, setPassportFile] = useState<File | null>(null);
   const [cscsFrontFile, setCscsFrontFile] = useState<File | null>(null);
   const [cscsBackFile, setCSCSBackFile] = useState<File | null>(null);
-  const [additionalFiles, setAdditionalFiles] = useState<(File | null)[]>([null, null, null, null, null]);
 
   useEffect(() => {
     // Get token and name from URL
@@ -40,20 +39,14 @@ export default function UploadPage() {
 
   const validateToken = async (tokenToValidate: string) => {
     try {
-      console.log('Validating token:', tokenToValidate);
-      console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
-
       const { data, error } = await supabase
         .from('applicants')
         .select('id, first_name, document_upload_token, documents_uploaded')
         .eq('document_upload_token', tokenToValidate)
         .single();
 
-      console.log('Query result:', { data, error });
-
       if (error || !data) {
-        console.error('Validation error:', error);
-        setError(`Invalid or expired upload link. Error: ${error?.message || 'No data found'}`);
+        setError('Invalid or expired upload link.');
         setValidToken(false);
       } else if (data.documents_uploaded) {
         setError('Documents already uploaded for this application.');
@@ -63,8 +56,7 @@ export default function UploadPage() {
         setName(data.first_name || name);
       }
     } catch (err) {
-      console.error('Validation exception:', err);
-      setError(`Error validating upload link: ${err}`);
+      setError('Error validating upload link.');
       setValidToken(false);
     } finally {
       setLoading(false);
