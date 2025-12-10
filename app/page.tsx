@@ -149,16 +149,20 @@ export default function UploadPage() {
         path: cscsBackPath
       });
 
-      // Webhook back to n8n
-      await fetch(process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL!, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token,
-          status: 'success',
-          files: uploadedFiles
-        })
-      });
+      // Webhook back to n8n (optional - don't fail if webhook fails)
+      try {
+        await fetch(process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL!, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            token,
+            status: 'success',
+            files: uploadedFiles
+          })
+        });
+      } catch (webhookError) {
+        console.log('Webhook failed (non-critical):', webhookError);
+      }
 
       setUploadComplete(true);
     } catch (err: any) {
