@@ -157,6 +157,7 @@ export default function UploadPage() {
     return (
       <div className="container">
         <div className="card">
+          <img src="/aztec-logo.png" alt="Aztec Landscapes" className="logo" />
           <h1>Loading...</h1>
         </div>
       </div>
@@ -167,6 +168,7 @@ export default function UploadPage() {
     return (
       <div className="container">
         <div className="card">
+          <img src="/aztec-logo.png" alt="Aztec Landscapes" className="logo" />
           <h1>❌ Upload Error</h1>
           <p className="error">{error}</p>
           <p>Please contact Aztec Landscapes if you believe this is an error.</p>
@@ -179,6 +181,7 @@ export default function UploadPage() {
     return (
       <div className="container">
         <div className="card">
+          <img src="/aztec-logo.png" alt="Aztec Landscapes" className="logo" />
           <h1>✅ Upload Complete!</h1>
           <p>Thank you, {name}! Your documents have been uploaded successfully.</p>
           <p>Check your WhatsApp for confirmation. Our labour manager will review your application and contact you within 48 hours.</p>
@@ -190,6 +193,7 @@ export default function UploadPage() {
   return (
     <div className="container">
       <div className="card">
+        <img src="/aztec-logo.png" alt="Aztec Landscapes" className="logo" />
         <h1>📄 Document Upload</h1>
         <p>Welcome, {name}!</p>
         <p>Please upload the following documents to complete your application:</p>
@@ -252,7 +256,7 @@ export default function UploadPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #000000 0%, #949494 100%);
           padding: 20px;
         }
         .card {
@@ -261,14 +265,22 @@ export default function UploadPage() {
           padding: 40px;
           max-width: 600px;
           width: 100%;
-          box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+          box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+          border-top: 4px solid #a69438;
+        }
+        .logo {
+          display: block;
+          max-width: 200px;
+          height: auto;
+          margin: 0 auto 30px auto;
         }
         h1 {
           margin: 0 0 20px 0;
-          color: #333;
+          color: #000000;
+          text-align: center;
         }
         p {
-          color: #666;
+          color: #949494;
           line-height: 1.6;
         }
         .upload-group {
@@ -277,30 +289,33 @@ export default function UploadPage() {
         label {
           display: block;
           margin-bottom: 8px;
-          color: #333;
+          color: #000000;
         }
         input[type="file"] {
           display: block;
           width: 100%;
           padding: 10px;
           margin-top: 8px;
-          border: 2px dashed #ddd;
+          border: 2px dashed #949494;
           border-radius: 8px;
           cursor: pointer;
+          transition: all 0.3s ease;
         }
         input[type="file"]:hover {
-          border-color: #667eea;
+          border-color: #a69438;
+          background-color: #f9f9f9;
         }
         .filename {
           display: block;
           margin-top: 8px;
-          color: #28a745;
+          color: #a69438;
           font-size: 14px;
+          font-weight: 600;
         }
         button {
           width: 100%;
           padding: 15px;
-          background: #667eea;
+          background: #a69438;
           color: white;
           border: none;
           border-radius: 8px;
@@ -308,13 +323,17 @@ export default function UploadPage() {
           font-weight: bold;
           cursor: pointer;
           margin-top: 20px;
+          transition: all 0.3s ease;
         }
         button:hover:not(:disabled) {
-          background: #5568d3;
+          background: #8f7e30;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(166, 148, 56, 0.4);
         }
         button:disabled {
-          background: #ccc;
+          background: #949494;
           cursor: not-allowed;
+          transform: none;
         }
         .error {
           color: #dc3545;
@@ -324,7 +343,10 @@ export default function UploadPage() {
           margin-top: 30px;
           text-align: center;
           font-size: 14px;
-          color: #999;
+          color: #949494;
+        }
+        .footer strong {
+          color: #a69438;
         }
       `}</style>
     </div>
