@@ -24,15 +24,22 @@ export default function UploadPage() {
 
   useEffect(() => {
     // Get token and name from URL
+    console.log('Full URL:', window.location.href);
+    console.log('Search params:', window.location.search);
+
     const params = new URLSearchParams(window.location.search);
     const urlToken = params.get('token');
     const urlName = params.get('name');
+
+    console.log('Parsed token:', urlToken);
+    console.log('Parsed name:', urlName);
 
     if (urlToken) {
       setToken(urlToken);
       setName(urlName || 'there');
       validateToken(urlToken);
     } else {
+      console.error('No token found in URL!');
       setError('Invalid upload link. Please check your WhatsApp message.');
       setLoading(false);
     }
