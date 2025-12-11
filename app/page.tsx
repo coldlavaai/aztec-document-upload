@@ -136,6 +136,33 @@ export default function UploadPage() {
         path: cscsBackPath
       });
 
+      // Upload Additional Documents (if any selected)
+      for (let i = 0; i < additionalFiles.length; i++) {
+        const additionalFile = additionalFiles[i];
+        if (additionalFile) {
+          const additionalPath = `${token}/additional_${i + 1}.${additionalFile.name.split('.').pop()}`;
+          const { data: additionalData, error: additionalError } = await supabase.storage
+            .from('applicant-documents')
+            .upload(additionalPath, additionalFile, { upsert: true });
+
+          if (additionalError) {
+            console.warn(`Failed to upload Additional Document ${i + 1}:`, additionalError.message);
+            // Don't throw - additional docs are optional
+          } else {
+            const { data: { publicUrl: additionalUrl } } = supabase.storage
+              .from('applicant-documents')
+              .getPublicUrl(additionalPath);
+
+            uploadedFiles.push({
+              type: `additional_${i + 1}`,
+              url: additionalUrl,
+              filename: additionalFile.name,
+              path: additionalPath
+            });
+          }
+        }
+      }
+
       // TODO: Re-enable webhook after n8n workflow is imported
       // Webhook temporarily disabled to prevent CORS errors during testing
       // Will send WhatsApp confirmation once webhook handler is active
@@ -234,6 +261,29 @@ export default function UploadPage() {
               />
               {cscsBackFile && <span className="filename">✓ {cscsBackFile.name}</span>}
             </label>
+          </div>
+
+          <div className="optional-section">
+            <h3>Additional Documents (Optional)</h3>
+            <p className="optional-hint">Upload any additional certificates, tickets, or proof of qualifications</p>
+
+            {[0, 1, 2, 3, 4].map((index) => (
+              <div className="upload-group" key={index}>
+                <label>
+                  <strong>Additional Document {index + 1} (Optional)</strong>
+                  <input
+                    type="file"
+                    accept="image/*,.pdf"
+                    onChange={(e) => {
+                      const newFiles = [...additionalFiles];
+                      newFiles[index] = e.target.files?.[0] || null;
+                      setAdditionalFiles(newFiles);
+                    }}
+                  />
+                  {additionalFiles[index] && <span className="filename">✓ {additionalFiles[index]!.name}</span>}
+                </label>
+              </div>
+            ))}
           </div>
 
           {error && <p className="error">{error}</p>}
