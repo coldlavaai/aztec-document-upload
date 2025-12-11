@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import './upload.css';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -246,106 +247,6 @@ export default function UploadPage() {
           Powered by <strong>Aztec Landscapes</strong>
         </p>
       </div>
-
-      <style jsx>{`
-        .container {
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg, #000000 0%, #949494 100%);
-          padding: 20px;
-        }
-        .card {
-          background: white;
-          border-radius: 12px;
-          padding: 40px;
-          max-width: 600px;
-          width: 100%;
-          box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-          border-top: 4px solid #a69438;
-        }
-        .logo {
-          display: block;
-          max-width: 200px;
-          height: auto;
-          margin: 0 auto 30px auto;
-        }
-        h1 {
-          margin: 0 0 20px 0;
-          color: #000000;
-          text-align: center;
-        }
-        p {
-          color: #949494;
-          line-height: 1.6;
-        }
-        .upload-group {
-          margin: 20px 0;
-        }
-        label {
-          display: block;
-          margin-bottom: 8px;
-          color: #000000;
-        }
-        input[type="file"] {
-          display: block;
-          width: 100%;
-          padding: 10px;
-          margin-top: 8px;
-          border: 2px dashed #949494;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-        input[type="file"]:hover {
-          border-color: #a69438;
-          background-color: #f9f9f9;
-        }
-        .filename {
-          display: block;
-          margin-top: 8px;
-          color: #a69438;
-          font-size: 14px;
-          font-weight: 600;
-        }
-        button {
-          width: 100%;
-          padding: 15px;
-          background: #a69438;
-          color: white;
-          border: none;
-          border-radius: 8px;
-          font-size: 16px;
-          font-weight: bold;
-          cursor: pointer;
-          margin-top: 20px;
-          transition: all 0.3s ease;
-        }
-        button:hover:not(:disabled) {
-          background: #8f7e30;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(166, 148, 56, 0.4);
-        }
-        button:disabled {
-          background: #949494;
-          cursor: not-allowed;
-          transform: none;
-        }
-        .error {
-          color: #dc3545;
-          font-weight: bold;
-        }
-        .footer {
-          margin-top: 30px;
-          text-align: center;
-          font-size: 14px;
-          color: #949494;
-        }
-        .footer strong {
-          color: #a69438;
-        }
-      `}</style>
     </div>
   );
 }
