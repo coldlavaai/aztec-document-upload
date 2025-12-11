@@ -22,6 +22,13 @@ export default function AdPage() {
           <p className="ad-subtitle">START ASAP</p>
         </div>
 
+        {/* Top CTA */}
+        <div className="ad-section top-cta-section">
+          <button className="apply-button apply-button-small" onClick={handleApply}>
+            👉 Apply Now via WhatsApp
+          </button>
+        </div>
+
         {/* Job details */}
         <div className="ad-section">
           <div className="ad-highlight">
