@@ -24,22 +24,15 @@ export default function UploadPage() {
 
   useEffect(() => {
     // Get token and name from URL
-    console.log('Full URL:', window.location.href);
-    console.log('Search params:', window.location.search);
-
     const params = new URLSearchParams(window.location.search);
     const urlToken = params.get('token');
     const urlName = params.get('name');
-
-    console.log('Parsed token:', urlToken);
-    console.log('Parsed name:', urlName);
 
     if (urlToken) {
       setToken(urlToken);
       setName(urlName || 'there');
       validateToken(urlToken);
     } else {
-      console.error('No token found in URL!');
       setError('Invalid upload link. Please check your WhatsApp message.');
       setLoading(false);
     }
@@ -47,20 +40,14 @@ export default function UploadPage() {
 
   const validateToken = async (tokenToValidate: string) => {
     try {
-      console.log('Validating token:', tokenToValidate);
-      console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
-
       const { data, error } = await supabase
         .from('applicants')
         .select('id, first_name, document_upload_token, documents_uploaded')
         .eq('document_upload_token', tokenToValidate)
         .single();
 
-      console.log('Query result:', { data, error });
-
       if (error || !data) {
-        console.error('Validation error:', error);
-        setError(`Invalid or expired upload link. Error: ${error?.message || 'No data found'}`);
+        setError('Invalid or expired upload link.');
         setValidToken(false);
       } else if (data.documents_uploaded) {
         setError('Documents already uploaded for this application.');
@@ -70,8 +57,7 @@ export default function UploadPage() {
         setName(data.first_name || name);
       }
     } catch (err) {
-      console.error('Validation exception:', err);
-      setError(`Error validating upload link: ${err}`);
+      setError('Error validating upload link. Please try again.');
       setValidToken(false);
     } finally {
       setLoading(false);
@@ -98,7 +84,7 @@ export default function UploadPage() {
         .from('applicant-documents')
         .upload(passportPath, passportFile, { upsert: true });
 
-      if (passportError) throw new Error('Failed to upload passport');
+      if (passportError) throw new Error(`Failed to upload Passport/ID: ${passportError.message}`);
 
       const { data: { publicUrl: passportUrl } } = supabase.storage
         .from('applicant-documents')
@@ -117,7 +103,7 @@ export default function UploadPage() {
         .from('applicant-documents')
         .upload(cscsFrontPath, cscsFrontFile, { upsert: true });
 
-      if (cscsFrontError) throw new Error('Failed to upload CSCS front');
+      if (cscsFrontError) throw new Error(`Failed to upload CSCS Card (Front): ${cscsFrontError.message}`);
 
       const { data: { publicUrl: cscsFrontUrl } } = supabase.storage
         .from('applicant-documents')
@@ -136,7 +122,7 @@ export default function UploadPage() {
         .from('applicant-documents')
         .upload(cscsBackPath, cscsBackFile, { upsert: true });
 
-      if (cscsBackError) throw new Error('Failed to upload CSCS back');
+      if (cscsBackError) throw new Error(`Failed to upload CSCS Card (Back): ${cscsBackError.message}`);
 
       const { data: { publicUrl: cscsBackUrl } } = supabase.storage
         .from('applicant-documents')
@@ -149,20 +135,9 @@ export default function UploadPage() {
         path: cscsBackPath
       });
 
-      // Webhook back to n8n (optional - don't fail if webhook fails)
-      try {
-        await fetch(process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL!, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            token,
-            status: 'success',
-            files: uploadedFiles
-          })
-        });
-      } catch (webhookError) {
-        console.log('Webhook failed (non-critical):', webhookError);
-      }
+      // TODO: Re-enable webhook after n8n workflow is imported
+      // Webhook temporarily disabled to prevent CORS errors during testing
+      // Will send WhatsApp confirmation once webhook handler is active
 
       setUploadComplete(true);
     } catch (err: any) {
@@ -202,8 +177,11 @@ export default function UploadPage() {
         <div className="card">
           <img src="/aztec-logo.png" alt="Aztec Landscapes" className="logo" />
           <h1>✅ Upload Complete!</h1>
-          <p>Thank you, {name}! Your documents have been uploaded successfully.</p>
-          <p>Check your WhatsApp for confirmation. Our labour manager will review your application and contact you within 48 hours.</p>
+          <p>Thank you for uploading your documents, {name}!</p>
+          <p>We appreciate your application. Our labour manager will review your documents and be in touch with you soon.</p>
+          <p className="footer" style={{marginTop: '20px', fontSize: '14px'}}>
+            You can now close this window.
+          </p>
         </div>
       </div>
     );
