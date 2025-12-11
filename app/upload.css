@@ -1,4 +1,8 @@
 /* Global styles for upload page */
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -21,7 +25,7 @@ body {
 .card {
   background: white;
   border-radius: 16px;
-  padding: 48px;
+  padding: 40px 32px;
   max-width: 560px;
   width: 100%;
   box-shadow: 0 20px 60px rgba(0,0,0,0.4);
@@ -50,6 +54,53 @@ p {
   font-size: 16px;
   margin: 12px 0;
   text-align: center;
+}
+
+.reference-section {
+  margin: 32px 0;
+  padding: 24px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.reference-section h3 {
+  margin: 0 0 20px 0;
+  color: #a69438;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.reference-fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.field-group label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.field-group input {
+  padding: 12px 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.field-group input:focus {
+  outline: none;
+  border-color: #a69438;
 }
 
 .upload-group {
@@ -158,19 +209,98 @@ button:disabled {
 
 /* Mobile responsive */
 @media (max-width: 640px) {
+  .container {
+    padding: 12px;
+  }
+
   .card {
-    padding: 32px 24px;
+    padding: 28px 20px;
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
   }
 
   h1 {
     font-size: 24px;
+    margin-bottom: 16px;
   }
 
   p {
     font-size: 14px;
+    line-height: 1.6;
+    margin: 10px 0;
   }
 
   .logo {
     max-width: 150px;
+    margin-bottom: 20px;
+  }
+
+  .upload-group {
+    margin: 20px 0;
+  }
+
+  .optional-section {
+    margin-top: 32px;
+    padding-top: 24px;
+  }
+
+  .optional-section h3 {
+    font-size: 18px;
+  }
+
+  label {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  input[type="file"] {
+    padding: 12px 10px;
+    font-size: 13px;
+    border-width: 2px;
+  }
+
+  button {
+    padding: 14px;
+    font-size: 16px;
+    margin-top: 24px;
+  }
+
+  .footer {
+    margin-top: 24px;
+    font-size: 13px;
+  }
+}
+
+/* Extra small mobile (iPhone SE, etc) */
+@media (max-width: 375px) {
+  .container {
+    padding: 8px;
+  }
+
+  .card {
+    padding: 24px 16px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  .logo {
+    max-width: 130px;
+  }
+
+  .upload-group {
+    margin: 16px 0;
+  }
+
+  input[type="file"] {
+    font-size: 12px;
+    padding: 10px 8px;
+  }
+
+  button {
+    font-size: 15px;
+    padding: 12px;
   }
 }

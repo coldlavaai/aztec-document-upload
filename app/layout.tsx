@@ -1,6 +1,10 @@
 export const metadata = {
   title: 'Aztec Landscapes - Document Upload',
   description: 'Upload your application documents',
+  icons: {
+    icon: '/icon.png',
+    apple: '/icon.png',
+  },
 };
 
 export default function RootLayout({

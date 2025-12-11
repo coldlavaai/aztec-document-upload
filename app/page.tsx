@@ -16,8 +16,18 @@ export default function UploadPage() {
   const [validToken, setValidToken] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadComplete, setUploadComplete] = useState(false);
+  const [alreadyUploaded, setAlreadyUploaded] = useState(false);
   const [error, setError] = useState('');
 
+  // Reference data
+  const [ref1Name, setRef1Name] = useState<string>('');
+  const [ref1Phone, setRef1Phone] = useState<string>('');
+  const [ref1Company, setRef1Company] = useState<string>('');
+  const [ref2Name, setRef2Name] = useState<string>('');
+  const [ref2Phone, setRef2Phone] = useState<string>('');
+  const [ref2Company, setRef2Company] = useState<string>('');
+
+  // File uploads
   const [passportFile, setPassportFile] = useState<File | null>(null);
   const [cscsFrontFile, setCscsFrontFile] = useState<File | null>(null);
   const [cscsBackFile, setCSCSBackFile] = useState<File | null>(null);
@@ -51,8 +61,8 @@ export default function UploadPage() {
         setError('Invalid or expired upload link.');
         setValidToken(false);
       } else if (data.documents_uploaded) {
-        setError('Documents already uploaded for this application.');
-        setValidToken(false);
+        setAlreadyUploaded(true);
+        setName(data.first_name || name);
       } else {
         setValidToken(true);
         setName(data.first_name || name);
@@ -68,6 +78,13 @@ export default function UploadPage() {
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate reference fields
+    if (!ref1Name || !ref1Phone || !ref1Company || !ref2Name || !ref2Phone || !ref2Company) {
+      setError('Please provide both references (all fields required).');
+      return;
+    }
+
+    // Validate documents
     if (!passportFile || !cscsFrontFile || !cscsBackFile) {
       setError('Please select all required documents.');
       return;
@@ -163,9 +180,29 @@ export default function UploadPage() {
         }
       }
 
-      // TODO: Re-enable webhook after n8n workflow is imported
-      // Webhook temporarily disabled to prevent CORS errors during testing
-      // Will send WhatsApp confirmation once webhook handler is active
+      // Send webhook to n8n for WhatsApp confirmation
+      try {
+        await fetch('https://n8n.coldlava.ai/webhook/document-upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            token,
+            status: 'success',
+            files: uploadedFiles,
+            references: {
+              reference_1_name: ref1Name,
+              reference_1_phone: ref1Phone,
+              reference_1_company: ref1Company,
+              reference_2_name: ref2Name,
+              reference_2_phone: ref2Phone,
+              reference_2_company: ref2Company
+            }
+          })
+        });
+      } catch (webhookError) {
+        console.log('Webhook notification failed (non-critical):', webhookError);
+        // Don't fail the upload if webhook fails - user still uploaded successfully
+      }
 
       setUploadComplete(true);
     } catch (err: any) {
@@ -181,6 +218,23 @@ export default function UploadPage() {
         <div className="card">
           <img src="/aztec-logo.png" alt="Aztec Landscapes" className="logo" />
           <h1>Loading...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (alreadyUploaded) {
+    return (
+      <div className="container">
+        <div className="card">
+          <img src="/aztec-logo.png" alt="Aztec Landscapes" className="logo" />
+          <h1>✅ Documents Already Uploaded</h1>
+          <p>Thank you, {name}!</p>
+          <p>Your documents have already been successfully uploaded and received.</p>
+          <p>Our labour manager will review your application and contact you within 48 hours.</p>
+          <p className="footer" style={{marginTop: '24px', fontSize: '14px', color: '#666'}}>
+            You can close this window. We'll be in touch soon!
+          </p>
         </div>
       </div>
     );
@@ -224,6 +278,83 @@ export default function UploadPage() {
         <p>Please upload the following documents to complete your application:</p>
 
         <form onSubmit={handleUpload}>
+          {/* Reference 1 */}
+          <div className="reference-section">
+            <h3>Reference 1</h3>
+            <div className="reference-fields">
+              <div className="field-group">
+                <label>Name *</label>
+                <input
+                  type="text"
+                  value={ref1Name}
+                  onChange={(e) => setRef1Name(e.target.value)}
+                  placeholder="Full name"
+                  required
+                />
+              </div>
+              <div className="field-group">
+                <label>Phone *</label>
+                <input
+                  type="tel"
+                  value={ref1Phone}
+                  onChange={(e) => setRef1Phone(e.target.value)}
+                  placeholder="+44..."
+                  required
+                />
+              </div>
+              <div className="field-group">
+                <label>Company *</label>
+                <input
+                  type="text"
+                  value={ref1Company}
+                  onChange={(e) => setRef1Company(e.target.value)}
+                  placeholder="Company name"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Reference 2 */}
+          <div className="reference-section">
+            <h3>Reference 2</h3>
+            <div className="reference-fields">
+              <div className="field-group">
+                <label>Name *</label>
+                <input
+                  type="text"
+                  value={ref2Name}
+                  onChange={(e) => setRef2Name(e.target.value)}
+                  placeholder="Full name"
+                  required
+                />
+              </div>
+              <div className="field-group">
+                <label>Phone *</label>
+                <input
+                  type="tel"
+                  value={ref2Phone}
+                  onChange={(e) => setRef2Phone(e.target.value)}
+                  placeholder="+44..."
+                  required
+                />
+              </div>
+              <div className="field-group">
+                <label>Company *</label>
+                <input
+                  type="text"
+                  value={ref2Company}
+                  onChange={(e) => setRef2Company(e.target.value)}
+                  placeholder="Company name"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <hr style={{margin: '32px 0', border: 'none', borderTop: '1px solid #ddd'}} />
+          <h3 style={{marginBottom: '16px'}}>Document Uploads</h3>
+
           <div className="upload-group">
             <label>
               <strong>1. Passport or ID</strong>
