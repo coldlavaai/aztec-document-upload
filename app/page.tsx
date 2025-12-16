@@ -19,13 +19,13 @@ export default function UploadPage() {
   const [alreadyUploaded, setAlreadyUploaded] = useState(false);
   const [error, setError] = useState('');
 
-  // Reference data
-  const [ref1Name, setRef1Name] = useState<string>('');
-  const [ref1Phone, setRef1Phone] = useState<string>('');
-  const [ref1Company, setRef1Company] = useState<string>('');
-  const [ref2Name, setRef2Name] = useState<string>('');
-  const [ref2Phone, setRef2Phone] = useState<string>('');
-  const [ref2Company, setRef2Company] = useState<string>('');
+  // Company history data
+  const [company1Name, setCompany1Name] = useState<string>('');
+  const [company1EndDate, setCompany1EndDate] = useState<string>('');
+  const [company2Name, setCompany2Name] = useState<string>('');
+  const [company2EndDate, setCompany2EndDate] = useState<string>('');
+  const [company3Name, setCompany3Name] = useState<string>('');
+  const [company3EndDate, setCompany3EndDate] = useState<string>('');
 
   // File uploads
   const [passportFile, setPassportFile] = useState<File | null>(null);
@@ -78,9 +78,9 @@ export default function UploadPage() {
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate reference fields
-    if (!ref1Name || !ref1Phone || !ref1Company || !ref2Name || !ref2Phone || !ref2Company) {
-      setError('Please provide both references (all fields required).');
+    // Validate company history fields
+    if (!company1Name || !company1EndDate || !company2Name || !company2EndDate || !company3Name || !company3EndDate) {
+      setError('Please provide all 3 companies with end dates.');
       return;
     }
 
@@ -189,13 +189,13 @@ export default function UploadPage() {
             token,
             status: 'success',
             files: uploadedFiles,
-            references: {
-              reference_1_name: ref1Name,
-              reference_1_phone: ref1Phone,
-              reference_1_company: ref1Company,
-              reference_2_name: ref2Name,
-              reference_2_phone: ref2Phone,
-              reference_2_company: ref2Company
+            companies: {
+              company_1_name: company1Name,
+              company_1_end_date: company1EndDate,
+              company_2_name: company2Name,
+              company_2_end_date: company2EndDate,
+              company_3_name: company3Name,
+              company_3_end_date: company3EndDate
             }
           })
         });
@@ -278,74 +278,83 @@ export default function UploadPage() {
         <p>Please upload the following documents to complete your application:</p>
 
         <form onSubmit={handleUpload}>
-          {/* Reference 1 */}
+          <h3 style={{marginBottom: '8px', textAlign: 'center'}}>Previous Employment History</h3>
+          <p style={{fontSize: '14px', color: '#666', textAlign: 'center', marginBottom: '24px'}}>
+            Please provide details of the last 3 companies you worked for
+          </p>
+
+          {/* Company 1 - Most Recent */}
           <div className="reference-section">
-            <h3>Reference 1</h3>
+            <h3>Company 1 (Most Recent)</h3>
             <div className="reference-fields">
               <div className="field-group">
-                <label>Name *</label>
+                <label>Company Name *</label>
                 <input
                   type="text"
-                  value={ref1Name}
-                  onChange={(e) => setRef1Name(e.target.value)}
-                  placeholder="Full name"
+                  value={company1Name}
+                  onChange={(e) => setCompany1Name(e.target.value)}
+                  placeholder="e.g. ABC Construction Ltd"
                   required
                 />
               </div>
               <div className="field-group">
-                <label>Phone *</label>
+                <label>End Date *</label>
                 <input
-                  type="tel"
-                  value={ref1Phone}
-                  onChange={(e) => setRef1Phone(e.target.value)}
-                  placeholder="+44..."
-                  required
-                />
-              </div>
-              <div className="field-group">
-                <label>Company *</label>
-                <input
-                  type="text"
-                  value={ref1Company}
-                  onChange={(e) => setRef1Company(e.target.value)}
-                  placeholder="Company name"
+                  type="date"
+                  value={company1EndDate}
+                  onChange={(e) => setCompany1EndDate(e.target.value)}
                   required
                 />
               </div>
             </div>
           </div>
 
-          {/* Reference 2 */}
+          {/* Company 2 */}
           <div className="reference-section">
-            <h3>Reference 2</h3>
+            <h3>Company 2</h3>
             <div className="reference-fields">
               <div className="field-group">
-                <label>Name *</label>
+                <label>Company Name *</label>
                 <input
                   type="text"
-                  value={ref2Name}
-                  onChange={(e) => setRef2Name(e.target.value)}
-                  placeholder="Full name"
+                  value={company2Name}
+                  onChange={(e) => setCompany2Name(e.target.value)}
+                  placeholder="e.g. XYZ Landscapes"
                   required
                 />
               </div>
               <div className="field-group">
-                <label>Phone *</label>
+                <label>End Date *</label>
                 <input
-                  type="tel"
-                  value={ref2Phone}
-                  onChange={(e) => setRef2Phone(e.target.value)}
-                  placeholder="+44..."
+                  type="date"
+                  value={company2EndDate}
+                  onChange={(e) => setCompany2EndDate(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Company 3 */}
+          <div className="reference-section">
+            <h3>Company 3</h3>
+            <div className="reference-fields">
+              <div className="field-group">
+                <label>Company Name *</label>
+                <input
+                  type="text"
+                  value={company3Name}
+                  onChange={(e) => setCompany3Name(e.target.value)}
+                  placeholder="e.g. Smith & Sons"
                   required
                 />
               </div>
               <div className="field-group">
-                <label>Company *</label>
+                <label>End Date *</label>
                 <input
-                  type="text"
-                  value={ref2Company}
-                  onChange={(e) => setRef2Company(e.target.value)}
-                  placeholder="Company name"
+                  type="date"
+                  value={company3EndDate}
+                  onChange={(e) => setCompany3EndDate(e.target.value)}
                   required
                 />
               </div>
